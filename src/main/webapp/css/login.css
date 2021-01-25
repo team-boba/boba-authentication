@@ -1,0 +1,36 @@
+body {
+    background-image: url('https://i.redd.it/y1ostvqnr4711.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}
+
+#formFooter {
+    background-color: #f6f6f6;
+    border-top: 1px solid #dce8f1;
+    padding: 25px;
+    text-align: center;
+    -webkit-border-radius: 0 0 10px 10px;
+    border-radius: 0 0 10px 10px;
+}
+
+.login-message {
+    font-weight: bold;
+    font-style: italic;
+    color: midnightblue;
+    text-align: center;
+}
+
+.underline-hover:hover {
+    text-decoration: underline;
+}
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    font-style: oblique;
+}
