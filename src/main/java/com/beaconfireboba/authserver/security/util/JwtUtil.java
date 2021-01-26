@@ -1,9 +1,7 @@
 package com.beaconfireboba.authserver.security.util;
 
 import com.beaconfireboba.authserver.constant.Constant;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.ZonedDateTime;
@@ -28,4 +26,24 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody().getSubject();
     }
 
+    public static String getSubjectFromToken(String token, String signingKey){
+        try {
+            String jwtSubject = Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody().getSubject();
+            return jwtSubject;
+        } catch (SignatureException e) {
+            System.out.println("Invalid JWT signature.");
+        } catch (MalformedJwtException e) {
+            System.out.println("Invalid JWT token.");
+        } catch (ExpiredJwtException e) {
+            System.out.println("Expired JWT token.");
+        } catch (UnsupportedJwtException e) {
+            System.out.println("Unsupported JWT token.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("JWT token compact of handler are invalid.");
+        }
+        return null;
+    }
+
+
 }
+
