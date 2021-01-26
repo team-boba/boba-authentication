@@ -5,6 +5,7 @@ package com.beaconfireboba.authserver.controller;
 
 import com.beaconfireboba.authserver.constant.Constant;
 import com.beaconfireboba.authserver.domain.token.RegisterToken;
+import com.beaconfireboba.authserver.domain.token.RegisterTokenResponse;
 import com.beaconfireboba.authserver.domain.user.RegisterUser;
 import com.beaconfireboba.authserver.entity.RegistrationToken;
 import com.beaconfireboba.authserver.service.RegistrationTokenService;
@@ -36,29 +37,20 @@ public class HireController {
         this.registrationTokenService = registrationTokenService;
     }
 
-    @GetMapping(value="/hire")
-    public String hirePage(Model model) {
-        model.addAttribute("registerToken", new RegisterToken());
-        return "hire";
-    }
 
 
-    /**
-     * Notice:
-     * Jwt token only wrap user email.
-     * email can be null.
-     * Valid duration 10 minutes.
-     * */
+
     @PostMapping(value="/getToken")
-    public String generateToken(Model model, HttpServletResponse httpServletResponse,String email,@ModelAttribute("registerToken") @Valid RegisterToken registerToken){
-
+    @ResponseBody
+    public RegisterTokenResponse generateToken(@RequestBody RegisterTokenResponse registerTokenResponse){
+        RegisterToken registerToken = registerTokenResponse.getRegisterToken();
         String serializedRegisterToken = tokenService.serializeTokenToJson(registerToken);
         String token = JwtUtil.generateToken(serializedRegisterToken);
-        model.addAttribute("notification", "successful generated token");
-        System.out.println(email);
-        registrationTokenService.addRegistrationTokenToDB(token, Constant.JWT_EXPIRE_MINUTES, email);
+        System.out.println(registerToken.getDuration());
+        System.out.println(registerToken.getEmail());
+        registrationTokenService.addRegistrationTokenToDB(token, registerToken.getDuration(), registerToken.getEmail());
 
-        return "successful";
+        return registerTokenResponse;
     }
 
 }

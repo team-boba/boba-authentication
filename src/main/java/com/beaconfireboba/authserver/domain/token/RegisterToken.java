@@ -23,4 +23,7 @@ public class RegisterToken {
 
     @NotNull
     private Integer houseID;
+
+    @NotNull
+    private Integer duration;
 }
