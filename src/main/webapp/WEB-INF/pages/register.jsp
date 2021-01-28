@@ -25,11 +25,14 @@
             <div class="form-group">
                 <form:label path="email">Email</form:label>
                 <form:input readonly="true" type="email" path="email" class="form-control"/>
+                <form:errors path="email" class="error-message"/>
             </div>
             <div class="form-group">
                 <form:label path="houseId">Your Assigned House Id</form:label>
                 <form:input readonly="true" type="value" path="houseId" class="form-control"/>
+                <form:errors path="houseId" class="error-message"/>
             </div>
+
             <button type="submit" class="btn btn-outline-primary">Register</button>
         </form:form>
 

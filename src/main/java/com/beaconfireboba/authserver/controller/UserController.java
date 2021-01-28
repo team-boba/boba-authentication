@@ -48,10 +48,12 @@ public class UserController {
                 model.addAttribute("registerUser", registerUser);
                 return "register";
             } catch (JsonProcessingException e) {
+                model.addAttribute("registerUser", new RegisterUser());
                 model.addAttribute("tokenErrorMessage", "Your registration token is invalid, please contact HR");
                 return "register";
             }
         } else{
+            model.addAttribute("registerUser", new RegisterUser());
             model.addAttribute("tokenErrorMessage", "Your registration token is invalid, please contact HR");
             return "register";
         }
@@ -61,6 +63,9 @@ public class UserController {
     public String registerUser(HttpServletResponse httpServletResponse,
        @ModelAttribute("registerUser") @Valid RegisterUser registerUser,
        BindingResult result) {
+        if (result.hasErrors()) {
+            return "register";
+        }
 
         Map<String, String> errors = validationUtil.validateRegisterUser(registerUser);
         for (String errorName : errors.keySet()) {
@@ -88,6 +93,10 @@ public class UserController {
 
     @PostMapping(value="/login")
     public String loginUser(HttpServletResponse httpServletResponse, @ModelAttribute("loginUser") @Valid LoginUser loginUser, BindingResult result) {
+        if (result.hasErrors()) {
+            return "login";
+        }
+
         Map<String, String> errors = validationUtil.validateLoginUser(loginUser);
         for (String errorName : errors.keySet()) {
             result.rejectValue(errorName, "error."+errorName, errors.get(errorName));

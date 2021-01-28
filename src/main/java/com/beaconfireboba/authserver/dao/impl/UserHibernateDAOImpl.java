@@ -59,7 +59,8 @@ public class UserHibernateDAOImpl extends AbstractHibernateDAO<User> implements 
         criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("userName"), userName));
         Query<User> query = session.createQuery(criteriaQuery);
         User user = query.uniqueResult();
-        user.getUserRoles().size();
+
+        if (user!=null && user.getUserRoles()!=null) user.getUserRoles().size();
         return user;
     }
 }

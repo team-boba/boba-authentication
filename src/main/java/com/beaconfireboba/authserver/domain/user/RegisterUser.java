@@ -2,12 +2,9 @@ package com.beaconfireboba.authserver.domain.user;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
-import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -23,9 +20,11 @@ public class RegisterUser {
 
     @NotNull
     @Email
+    @Size(min=1, message="Email is required.")
     private String email;
 
     private String createDate;
 
+    @NotNull
     private int houseId;
 }

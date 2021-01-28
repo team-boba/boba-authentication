@@ -32,6 +32,7 @@ public class ValidationUtil {
 
     public Map<String, String> validateRegisterUser(RegisterUser registerUser) {
         Map<String, String> errors = new HashMap<>();
+
         User user = userService.getUserByName(registerUser.getUserName());
         if (user != null) {
             errors.put("userName", "User name already exists.");
