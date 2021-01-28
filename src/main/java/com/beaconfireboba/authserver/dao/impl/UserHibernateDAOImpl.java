@@ -1,6 +1,5 @@
 package com.beaconfireboba.authserver.dao.impl;
 
-
 import com.beaconfireboba.authserver.dao.AbstractHibernateDAO;
 import com.beaconfireboba.authserver.dao.UserDAO;
 import com.beaconfireboba.authserver.entity.User;

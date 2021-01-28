@@ -1,12 +1,14 @@
 package com.beaconfireboba.authserver.controller;
 
 import com.beaconfireboba.authserver.constant.Constant;
+import com.beaconfireboba.authserver.entity.RegistrationToken;
+import com.beaconfireboba.authserver.entity.User;
+import com.beaconfireboba.authserver.service.RegistrationTokenService;
+import com.beaconfireboba.authserver.service.UserService;
 import com.beaconfireboba.authserver.domain.user.LoginUser;
 import com.beaconfireboba.authserver.domain.user.RegisterUser;
-import com.beaconfireboba.authserver.entity.User;
 import com.beaconfireboba.authserver.security.util.CookieUtil;
 import com.beaconfireboba.authserver.security.util.JwtUtil;
-import com.beaconfireboba.authserver.service.UserService;
 import com.beaconfireboba.authserver.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.Map;
 
 @Controller
@@ -27,11 +30,22 @@ public class UserController {
     @Autowired
     private ValidationUtil validationUtil;
 
-    @GetMapping(value="/register")
-    public String registerPage(Model model) {
-        model.addAttribute("registerUser", new RegisterUser());
-        model.addAttribute("roleNames", userService.getAllRoleNames());
-        return "register";
+    @Autowired
+    private RegistrationTokenService registrationTokenService;
+
+
+    @GetMapping(value="/register/{token}")
+    public String registerPage(Model model, @PathVariable("token") String token) {
+        String registrationToken = JwtUtil.getSubjectFromToken(token, Constant.SIGNING_KEY);
+        if(registrationToken != null){
+            model.addAttribute("registerUser", new RegisterUser());
+            model.addAttribute("roleNames", userService.getAllRoleNames());
+            return "register";
+        }
+        else{
+            System.out.println("cannot find any register token");
+            return null;
+        }
     }
 
     @PostMapping(value="/register")

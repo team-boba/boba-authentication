@@ -25,7 +25,7 @@ public class HibernateConfig {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
         sessionFactory.setPackagesToScan(
-                "com.impressivehen.authserver.entity");
+                "com.beaconfireboba.authserver.entity");
         sessionFactory.setHibernateProperties(hibernateProperties());
 
         return sessionFactory;

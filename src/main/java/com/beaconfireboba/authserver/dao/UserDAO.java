@@ -1,6 +1,5 @@
 package com.beaconfireboba.authserver.dao;
 
-
 import com.beaconfireboba.authserver.entity.User;
 
 import java.util.List;

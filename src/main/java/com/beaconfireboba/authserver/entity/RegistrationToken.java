@@ -4,41 +4,36 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name="user")
+@Table(name="registration_token")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class User implements Serializable {
+public class RegistrationToken implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Integer id;
 
     @NotNull
-    @Column(name="username")
-    private String userName;
+    @Column(name = "token")
+    private String token;
 
     @NotNull
-    @Column(name="password")
-    private String password;
+    @Column(name = "valid_duration")
+    private int validDuration;
 
     @NotNull
     @Column(name="email")
     private String email;
 
-
     @NotNull
-    @Column(name="create_date")
-    private String createDate;
+    @Column(name="create_by")
+    private String createBy;
 
-
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="user")
-    private Set<UserRole> userRoles = new HashSet<>();
 }
