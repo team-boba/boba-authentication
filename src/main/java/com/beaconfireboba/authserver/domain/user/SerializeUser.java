@@ -12,5 +12,4 @@ import java.io.Serializable;
 public class SerializeUser implements Serializable {
     private String userName;
     private String email;
-    private long personId;
 }

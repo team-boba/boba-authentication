@@ -24,7 +24,7 @@ public class Role implements Serializable {
 
     @NotNull
     @Size(min=1, message="Role name must not be empty.")
-    @Column(name="rolename")
+    @Column(name="role_name")
     private String roleName;
 
     @NotNull
@@ -33,15 +33,9 @@ public class Role implements Serializable {
     private String description;
 
     @NotNull
-    @Column(name="createdate")
+    @Column(name="create_date")
     private String createDate;
 
-    @NotNull
-    @Column(name="modificationdate")
-    private String modificationDate;
-
-    @Column(name="lastmodificationuserid")
-    private Integer lastModificationUserId;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="role")
     private Set<UserRole> userRoles = new HashSet<>();

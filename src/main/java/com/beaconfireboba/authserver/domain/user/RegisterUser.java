@@ -11,10 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-@Component
 public class RegisterUser {
     @NotNull
     @Size(min=3, message="User name must be greater than 2 characters.")
@@ -25,10 +22,10 @@ public class RegisterUser {
     private String password;
 
     @NotNull
-    @Email(message="Email invalid.")
-    @Size(min=1, message="Email must not be empty.")
+    @Email
     private String email;
 
-    @NotNull
-    private List<String> roleNames = new ArrayList<>();
+    private String createDate;
+
+    private int houseId;
 }

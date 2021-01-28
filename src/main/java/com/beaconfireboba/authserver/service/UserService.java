@@ -3,11 +3,11 @@ package com.beaconfireboba.authserver.service;
 import com.beaconfireboba.authserver.dao.RoleDAO;
 import com.beaconfireboba.authserver.dao.UserDAO;
 import com.beaconfireboba.authserver.dao.UserRoleDAO;
-import com.beaconfireboba.authserver.domain.user.RegisterUser;
-import com.beaconfireboba.authserver.domain.user.SerializeUser;
 import com.beaconfireboba.authserver.entity.Role;
 import com.beaconfireboba.authserver.entity.User;
 import com.beaconfireboba.authserver.entity.UserRole;
+import com.beaconfireboba.authserver.domain.user.RegisterUser;
+import com.beaconfireboba.authserver.domain.user.SerializeUser;
 import com.beaconfireboba.authserver.util.DateUtil;
 import com.beaconfireboba.authserver.util.IdUtil;
 import com.beaconfireboba.authserver.util.SerializeUtil;
@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+    private static final int EMPLOYEE_ROLE_ID = 1;
+
     private UserDAO userDAO;
     private RoleDAO roleDAO;
     private UserRoleDAO userRoleDAO;
@@ -40,20 +42,15 @@ public class UserService {
         user.setPassword(registerUser.getPassword());
         user.setEmail(registerUser.getEmail());
         user.setCreateDate(dateUtil.getCurrentDate());
-        user.setModificationDate(dateUtil.getCurrentDate());
-        user.setPersonId(idUtil.generateUUID());
         User newUser = userDAO.addUser(user);
 
-        for (String roleName : registerUser.getRoleNames()) {
-            UserRole userRole = new UserRole();
-            userRole.setActiveFlag(true);
-            userRole.setCreateDate(dateUtil.getCurrentDate());
-            userRole.setModificationDate(dateUtil.getCurrentDate());
-            Role role = roleDAO.getRoleByName(roleName);
-            userRole.setUser(newUser);
-            userRole.setRole(role);
-            userRoleDAO.addUserRole(userRole);
-        }
+        UserRole userRole = new UserRole();
+        userRole.setActiveFlag(true);
+        userRole.setCreateDate(dateUtil.getCurrentDate());
+        Role role = roleDAO.getRoleById(EMPLOYEE_ROLE_ID);
+        userRole.setUser(newUser);
+        userRole.setRole(role);
+        userRoleDAO.addUserRole(userRole);
 
         return newUser;
     }
@@ -67,8 +64,6 @@ public class UserService {
         SerializeUser serializeUser = new SerializeUser();
         serializeUser.setUserName(user.getUserName());
         serializeUser.setEmail(user.getEmail());
-        serializeUser.setPersonId(user.getPersonId());
-
         return serializeUtil.serialize(serializeUser);
     }
 

@@ -28,10 +28,9 @@ body {
     font-style: oblique;
 }
 
-#checkboxes span{
-    margin-right: 15px;
-}
-
-#checkboxes input{
-    margin-right: 2px;
+.token-message {
+    font-weight: bold;
+    font-style: italic;
+    color: midnightblue;
+    text-align: center;
 }

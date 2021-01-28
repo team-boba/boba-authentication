@@ -32,4 +32,7 @@ public class RoleHibernateDAOImpl extends AbstractHibernateDAO<Role> implements 
         Role role = query.uniqueResult();
         return role;
     }
+
+    @Override
+    public Role getRoleById(int id) { return findById(id); }
 }

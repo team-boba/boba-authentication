@@ -1,6 +1,5 @@
 package com.beaconfireboba.authserver.dao.impl;
 
-
 import com.beaconfireboba.authserver.dao.AbstractHibernateDAO;
 import com.beaconfireboba.authserver.dao.UserDAO;
 import com.beaconfireboba.authserver.entity.User;
@@ -60,6 +59,7 @@ public class UserHibernateDAOImpl extends AbstractHibernateDAO<User> implements 
         criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("userName"), userName));
         Query<User> query = session.createQuery(criteriaQuery);
         User user = query.uniqueResult();
+        user.getUserRoles().size();
         return user;
     }
 }
