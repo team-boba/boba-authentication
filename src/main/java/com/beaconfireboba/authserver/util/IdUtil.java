@@ -9,8 +9,6 @@ public class IdUtil {
     public long generateUUID() {
         UUID uuid = UUID.randomUUID();
         long highbits = uuid.getMostSignificantBits();
-//        long lowbits = uuid.getLeastSignificantBits();
-
         return Math.abs(highbits);
     }
 }

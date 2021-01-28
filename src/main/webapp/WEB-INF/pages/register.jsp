@@ -8,10 +8,10 @@
 </head>
 <body>
 <div class="container py-4">
-    <div class="bg-white rounded px-4 pt-3">
+    <div class="bg-white rounded px-4 py-3">
         <h2 class="mb-2 title">REGISTER</h2>
 
-        <form:form modelAttribute="registerUser" method="post" action="/auth/register?redirect=${param.redirect}">
+        <form:form modelAttribute="registerUser" method="post" action="/auth/register">
             <div class="form-group">
                 <form:label path="userName">Name</form:label>
                 <form:input type="text" path="userName" class="form-control" placeholder="Enter name"/>
@@ -24,22 +24,16 @@
             </div>
             <div class="form-group">
                 <form:label path="email">Email</form:label>
-                <form:input type="email" path="email" class="form-control" placeholder="Enter email"/>
-                <form:errors path="email" class="error-message"/>
+                <form:input readonly="true" type="email" path="email" class="form-control"/>
             </div>
-            <div class="form-group" id="checkboxes" >
-                <form:label path="roleNames">Role</form:label>
-                <br>
-                <form:checkboxes path="roleNames" items="${roleNames}"/>
-                <br>
-                <form:errors path="roleNames" class="error-message"/>
+            <div class="form-group">
+                <form:label path="houseId">Your Assigned House Id</form:label>
+                <form:input readonly="true" type="value" path="houseId" class="form-control"/>
             </div>
             <button type="submit" class="btn btn-outline-primary">Register</button>
         </form:form>
 
-        <div id="formFooter">
-            <a class="underline-hover" href="/auth/login?redirect=${param.redirect}">Already user? Login</a>
-        </div>
+        <h3 class="token-message my-3">${tokenErrorMessage}</h3>
     </div>
 </div>
 </body>

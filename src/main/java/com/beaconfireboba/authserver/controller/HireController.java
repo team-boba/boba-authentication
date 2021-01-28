@@ -1,56 +1,51 @@
-/**
- * Just class just for test*/
-
 package com.beaconfireboba.authserver.controller;
 
-import com.beaconfireboba.authserver.constant.Constant;
-import com.beaconfireboba.authserver.domain.token.RegisterToken;
-import com.beaconfireboba.authserver.domain.token.RegisterTokenResponse;
-import com.beaconfireboba.authserver.domain.user.RegisterUser;
-import com.beaconfireboba.authserver.entity.RegistrationToken;
+import com.beaconfireboba.authserver.domain.token.HrRegisterTokenRequest;
 import com.beaconfireboba.authserver.service.RegistrationTokenService;
 import com.beaconfireboba.authserver.security.util.JwtUtil;
-import com.beaconfireboba.authserver.service.UserService;
+import com.beaconfireboba.authserver.util.MailUtil;
+import com.beaconfireboba.authserver.util.SerializeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.imageio.spi.RegisterableService;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Date;
 
 
 @Controller
 @RequestMapping("/hr")
 public class HireController {
 
+    private SerializeUtil serializeUtil;
     private RegistrationTokenService registrationTokenService;
+    private MailUtil mailUtil;
+
+    @Async
+    @PostMapping(value="/generateToken")
+    @ResponseBody
+    public void generateToken(@RequestBody HrRegisterTokenRequest hrRegisterTokenRequest){
+        String serializedHrRegisterTokenRequest = serializeUtil.serialize(hrRegisterTokenRequest);
+        String token = JwtUtil.generateToken(serializedHrRegisterTokenRequest, hrRegisterTokenRequest.getValidDuration());
+
+        registrationTokenService.addRegistrationToken(token, hrRegisterTokenRequest.getValidDuration()
+            , hrRegisterTokenRequest.getEmail(), "admin");
+
+        mailUtil.sendGeneralMail(hrRegisterTokenRequest.getEmail(), "Notice from hr please register",
+            "http://localhost:9999/auth/register?jwt=" + token);
+    }
 
     @Autowired
-    private RegistrationTokenService tokenService;
+    public void setSerializeUtil(SerializeUtil serializeUtil) {
+        this.serializeUtil = serializeUtil;
+    }
 
     @Autowired
-    public HireController(RegistrationTokenService registrationTokenService){
+    public void setRegistrationTokenService(RegistrationTokenService registrationTokenService) {
         this.registrationTokenService = registrationTokenService;
     }
 
-
-
-
-    @PostMapping(value="/getToken")
-    @ResponseBody
-    public RegisterTokenResponse generateToken(@RequestBody RegisterTokenResponse registerTokenResponse){
-        RegisterToken registerToken = registerTokenResponse.getRegisterToken();
-        String serializedRegisterToken = tokenService.serializeTokenToJson(registerToken);
-        String token = JwtUtil.generateToken(serializedRegisterToken);
-        System.out.println(registerToken.getDuration());
-        System.out.println(registerToken.getEmail());
-        registrationTokenService.addRegistrationTokenToDB(token, registerToken.getDuration(), registerToken.getEmail());
-
-        return registerTokenResponse;
+    @Autowired
+    public void setMailUtil(MailUtil mailUtil) {
+        this.mailUtil = mailUtil;
     }
-
 }
+

@@ -37,10 +37,6 @@ public class ValidationUtil {
             errors.put("userName", "User name already exists.");
         }
 
-        if (registerUser.getRoleNames().isEmpty()) {
-            errors.put("roleNames", "Please check a role.");
-        }
-
         return errors;
     }
 }

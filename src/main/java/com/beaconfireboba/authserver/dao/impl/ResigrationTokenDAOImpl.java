@@ -17,17 +17,6 @@ import java.util.List;
 @Repository("RegistrationTokenHibernateDAO")
 public class ResigrationTokenDAOImpl extends AbstractHibernateDAO<RegistrationToken> implements RegistrationTokenDAO {
     public ResigrationTokenDAOImpl() { setClazz(RegistrationToken.class); }
-    @Override
-    public RegistrationToken getRegistrationTokenWithToken(String token) {
-        Session session = getCurrentSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<RegistrationToken> criteriaQuery = criteriaBuilder.createQuery(RegistrationToken.class);
-        Root<RegistrationToken> root = criteriaQuery.from(RegistrationToken.class);
-        criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("token"), token));
-        Query<RegistrationToken> query = session.createQuery(criteriaQuery);
-        RegistrationToken registrationToken = query.uniqueResult();
-        return registrationToken;
-    }
 
     @Override
     public RegistrationToken addRegistrationToken(RegistrationToken token) {
