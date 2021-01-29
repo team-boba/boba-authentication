@@ -112,7 +112,7 @@ public class UserController {
         String token = JwtUtil.generateToken(serializeUserJson, Constant.JWT_LOGIN_EXPIRE_MINUTES);
         CookieUtil.create(httpServletResponse, Constant.JWT_TOKEN_COOKIE_NAME, token, false, -1, "localhost");
 
-        if (user.getUserRoles().contains("hr")) {
+        if (user.getUserRoles().stream().anyMatch(r->r.getRole().getRoleName().equals("hr"))) {
             return "redirect:" + "http://localhost:4200/hr" ;
         } else {
             return "redirect:" + "http://localhost:4200/employee/" + user.getId();
