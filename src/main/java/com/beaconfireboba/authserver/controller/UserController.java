@@ -1,7 +1,11 @@
 package com.beaconfireboba.authserver.controller;
 
 import com.beaconfireboba.authserver.constant.Constant;
+import com.beaconfireboba.authserver.domain.common.ServiceStatus;
 import com.beaconfireboba.authserver.domain.token.HrRegisterTokenRequest;
+import com.beaconfireboba.authserver.domain.token.JwtRequest;
+import com.beaconfireboba.authserver.domain.user.SerializeUser;
+import com.beaconfireboba.authserver.domain.user.SerializeUserResponse;
 import com.beaconfireboba.authserver.entity.User;
 import com.beaconfireboba.authserver.service.UserService;
 import com.beaconfireboba.authserver.domain.user.LoginUser;
@@ -120,8 +124,79 @@ public class UserController {
     }
 
     @GetMapping(value="/logout")
-    public String logoutUser(HttpServletResponse httpServletResponse, @RequestParam("redirect") String redirect) {
+    public String logoutUser(HttpServletResponse httpServletResponse) {
         CookieUtil.clear(httpServletResponse, Constant.JWT_TOKEN_COOKIE_NAME);
-        return "login";
+        return "redirect:" + "http://localhost:9999/auth/login" ;
+    }
+
+    @PostMapping(value="/deserialize-jwt")
+    @ResponseBody
+    public SerializeUserResponse deserializeJwt(@RequestBody JwtRequest jwtRequest) {
+        SerializeUserResponse serializeUserResponse = new SerializeUserResponse();
+        String serializeUserJson = JwtUtil.getSubjectFromToken(jwtRequest.getJwt(), Constant.SIGNING_KEY);
+
+        if (serializeUserJson == null) {
+            prepareSerializeUserResponse(serializeUserResponse, false, "JWT invalid.");
+            return serializeUserResponse;
+        }
+
+        try {
+            SerializeUser serializeUser = new ObjectMapper().readValue(serializeUserJson, SerializeUser.class);
+            serializeUserResponse.setSerializeUser(serializeUser);
+            prepareSerializeUserResponse(serializeUserResponse, true, "");
+            return serializeUserResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        prepareSerializeUserResponse(serializeUserResponse, false, "JWT invalid.");
+        return serializeUserResponse;
+    }
+
+    @PostMapping(value="/is-authenticated-user")
+    @ResponseBody
+    public boolean isAuthenticatedUser(HttpServletResponse httpServletResponse, @RequestBody JwtRequest jwtRequest) {
+        String serializeUserJson = JwtUtil.getSubjectFromToken(jwtRequest.getJwt(), Constant.SIGNING_KEY);
+
+        if (serializeUserJson == null) {
+            return false;
+        }
+
+        try {
+            SerializeUser serializeUser = new ObjectMapper().readValue(serializeUserJson, SerializeUser.class);
+            if (!serializeUser.isHr() && serializeUser.getUserId()!=jwtRequest.getUserId()) {
+                CookieUtil.clear(httpServletResponse, Constant.JWT_TOKEN_COOKIE_NAME);
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @PostMapping(value="/is-authorized-user")
+    @ResponseBody
+    public boolean isAuthorizedUser(HttpServletResponse httpServletResponse, @RequestBody JwtRequest jwtRequest) {
+        String serializeUserJson = JwtUtil.getSubjectFromToken(jwtRequest.getJwt(), Constant.SIGNING_KEY);
+
+        if (serializeUserJson == null) {
+            return false;
+        }
+
+        try {
+            SerializeUser serializeUser = new ObjectMapper().readValue(serializeUserJson, SerializeUser.class);
+            if (!serializeUser.isHr()) {
+                CookieUtil.clear(httpServletResponse, Constant.JWT_TOKEN_COOKIE_NAME);
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private void prepareSerializeUserResponse(SerializeUserResponse response, boolean success, String errorMessage) {
+        response.setServiceStatus(new ServiceStatus(success ? "SUCCESS" : "FAILED", success, errorMessage));
     }
 }

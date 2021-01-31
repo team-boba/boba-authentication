@@ -64,6 +64,8 @@ public class UserService {
         SerializeUser serializeUser = new SerializeUser();
         serializeUser.setUserName(user.getUserName());
         serializeUser.setEmail(user.getEmail());
+        serializeUser.setUserId(user.getId());
+        serializeUser.setHr(user.getUserRoles().stream().anyMatch(r->r.getRole().getRoleName().equals("hr")));
         return serializeUtil.serialize(serializeUser);
     }
 
