@@ -8,10 +8,10 @@
 </head>
 <body>
 <div class="container py-4">
-    <div class="bg-white rounded px-4 pt-3">
+    <div class="bg-white rounded px-4 py-4">
         <h2 class="mb-2 title">LOGIN</h2>
 
-        <form:form modelAttribute="loginUser" method="post" action="/auth/login?redirect=${param.redirect}">
+        <form:form modelAttribute="loginUser" method="post" action="/auth/login">
             <div class="form-group">
                 <form:label path="userName">Name</form:label>
                 <form:input type="text" path="userName" class="form-control" placeholder="Enter name"/>
@@ -24,10 +24,6 @@
             </div>
             <button type="submit" class="btn btn-outline-primary">Login</button>
         </form:form>
-
-        <div id="formFooter">
-            <a class="underline-hover" href="/auth/register?redirect=${param.redirect}">Not a user? Register</a>
-        </div>
 
         <h3 class="login-message my-3">${loginMessage}</h3>
     </div>
